@@ -7,10 +7,11 @@ import sqlalchemy
 
 class FlatLinkPipeline(object):
 
+
+
     def process_item(self,item,spider):
 
         try:
-
             link = FlatLink( id = item["id"], link = item["link"] )
             db.session.add(link)
             db.session.commit()
@@ -27,8 +28,9 @@ class FlatLinkPipeline(object):
             f.close()
 
 
+
         except sqlalchemy.exc.IntegrityError:
-                print("INTEGITY ERROR")
+                print("LINK ALREADY EXISTS")
                 db.session.rollback()
 
         except Exception as e:
