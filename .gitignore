@@ -22,6 +22,11 @@ __pycache__/
 logs/
 
 
+#myenv
+
+myenv/
+
+
 # Distribution / packaging
 .Python
 build/
