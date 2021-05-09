@@ -51,7 +51,7 @@ class Flat(db.Model):
     balcony_loggia = db.Column(db.String(128))
     bathtubs = db.Column(db.String(128))
     project = db.Column(db.String(128))
-    state = db.Column(db.String(32))
+    state = db.Column(db.String(128))
     status = db.Column(db.String(128))
 
     #address
@@ -70,9 +70,9 @@ class Flat(db.Model):
     description = db.Column(db.String(5000))
 
     #price and seller
-    price = db.Column(db.String(32))
+    price = db.Column(db.String(128))
     currency = db.Column(db.String(64))
-    price_per_m2 = db.Column(db.String(32))
+    price_per_m2 = db.Column(db.String(128))
     seller = db.Column(db.String(64))
 
 
@@ -132,7 +132,7 @@ class House(db.Model):
     rooms = db.Column(db.Float)
     bedrooms = db.Column(db.String(128))
     garden_area = db.Column(db.Float)
-    state = db.Column(db.String(32))
+    state = db.Column(db.String(128))
     status = db.Column(db.String(128))
 
 
@@ -154,9 +154,9 @@ class House(db.Model):
 
 
     #price and seller
-    price = db.Column(db.String(32))
+    price = db.Column(db.String(128))
     currency = db.Column(db.String(64))
-    price_per_m2 = db.Column(db.String(32))
+    price_per_m2 = db.Column(db.String(128))
     seller = db.Column(db.String(64))
 
 

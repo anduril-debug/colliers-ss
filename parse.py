@@ -24,7 +24,7 @@ def parse_flats():
 
 
 
-parse_flat_links()
-print("FINISHED FLAT LINKS PARSING....")
-print("STARTED FLATS PARSING>>>>")
+# parse_flat_links()
+# print("FINISHED FLAT LINKS PARSING....")
+# print("STARTED FLATS PARSING>>>>")
 parse_flats()
