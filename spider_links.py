@@ -1,6 +1,7 @@
 import scrapy
 from items import FlatLinkItem
 from pipelines import FlatLinkPipeline
+from datetime import datetime
 
 
 
@@ -17,22 +18,33 @@ class FlatLinksSpider(scrapy.Spider):
 
 
     def parse(self, response):
+        try:
+            links = []
+            for flat in response.css("div.latest_article_each "):
+                id = int(flat.css('div::attr(data-id)').get())
+                link = flat.css('a::attr(href)').get()
 
-        links = []
-        for flat in response.css("div.latest_article_each "):
-            id = int(flat.css('div::attr(data-id)').get())
-            link = flat.css('a::attr(href)').get()
-
-            links.append(link)
+                links.append(link)
 
 
-        for link in links:
-            try:
-                id = int(link.split("-")[-1])
-                item = FlatLinkItem(id = id, link = "https://ss.ge"+link)
+            for link in links:
+                try:
+                    id = int(link.split("-")[-1])
+                    item = FlatLinkItem(id = id, link = "https://ss.ge"+link)
 
-                pipe = FlatLinkPipeline()
-                pipe.process_item(item, self)
-            except Exception as e:
-                print(e)
-                continue
+                    pipe = FlatLinkPipeline()
+                    pipe.process_item(item, self)
+                except Exception as e:
+                    print(e)
+                    continue
+
+        except Exception as e:
+            now = datetime.now()
+            current_time = now.strftime("%Y-%m-%d-%H:%M:%S")
+
+
+            f = open("logs/flat_links/flat_links_logs.txt","a")
+            line = "---------------------------------"
+            f.write("\n" + current_time + ": " + str(e) +"\n" + line + "\n")
+            f.close()
+            print(e)

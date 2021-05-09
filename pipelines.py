@@ -5,6 +5,10 @@ from datetime import datetime
 import sys
 import sqlalchemy
 
+now = datetime.now()
+current_time = now.strftime("%Y-%m-%d-%H:%M:%S")
+
+
 class FlatLinkPipeline(object):
 
 
@@ -16,16 +20,13 @@ class FlatLinkPipeline(object):
             db.session.add(link)
             db.session.commit()
 
-            print("item id:"+str(item["id"])+"added successfuly")
+            print("item id:"+str(item["id"])+" added successfuly")
 
-            now = datetime.now()
-            current_time = now.strftime("%Y-%m-%d-%H:%M:%S")
-
-
-            f = open("logs/flat_links_logs.txt","a")
+            f = open(f"logs/flat_links/{current_time}-PIPELINES_flat_links_logs-SUCCESS.txt","a")
             line = "---------------------------------"
-            f.write("\n" + current_time + ": " + "item id:"+str(item["id"])+"added successfuly" +"\n" + line + "\n")
+            f.write("\n" + current_time + ": " + "link id: " + str(item["id"]) + " successfuly added." + "\n" + line + "\n")
             f.close()
+
 
 
 
@@ -35,9 +36,9 @@ class FlatLinkPipeline(object):
 
         except Exception as e:
 
-            f = open("logs/flat_links_logs.txt","a")
+            f = open(f"logs/flat_links/{current_time}-PIPELINES_flat_links_logs.txt","a")
             line = "---------------------------------"
-            f.write("\n" + current_time + ": " + str(sys.exc_info()[0]) +"\n" + line + "\n")
+            f.write("\n" + current_time + ": " + str(e) +"\n" + line + "\n")
             f.close()
             print(e)
 
@@ -50,6 +51,7 @@ class FlatLinkPipeline(object):
 
 
 class FlatPipeline(object):
+
 
 
         def process_item(self, item, spider):
@@ -104,13 +106,19 @@ class FlatPipeline(object):
 
             try:
 
+                description = item["description"]
+
+                if item["description"] == None:
+                    description = ""
+
+
 
                 flat = Flat(
-                            id = int(item["id"]), link_id = int(item["id"]),header = item["header"],time = item["time"], total_area = float(item["total_area"]),
+                            id = int(item["id"]), link_id = int(item["link_id"]),header = item["header"],time = item["time"], total_area = float(item["total_area"]),
                             rooms = float(item["rooms"]),bedrooms = item["bedrooms"],stage = int(item["stage"]),total_stages = int(item["total_stages"]),
                             balcony_loggia = item["balcony_loggia"], bathtubs = item["bathtubs"],project = item["project"],state = item["state"], status = item["status"],
                             latitude = latitude,longitude =longitude,garage = item["garage"],basement = item["basement"],stockroom = item["stockroom"],
-                            gas = item["gas"],central_heating = item["central_heating"],description = item["description"],price = item["price"], currency = item["currency"],
+                            gas = item["gas"],central_heating = item["central_heating"],description = description,price = item["price"], currency = item["currency"],
                             price_per_m2 = item["price_per_m2"],seller = item["seller"],
                             street_address = addresses["street_address"], route = addresses["route"], political = addresses["political"], country = addresses["country"],
                             administrative_area_level_1 = addresses["administrative_area_level_1"], administrative_area_level_2 = addresses["administrative_area_level_2"],
@@ -124,14 +132,14 @@ class FlatPipeline(object):
                 db.session.commit()
                 print("flad id: "+str(item["id"])+" successfuly added")
 
-                now = datetime.now()
-                current_time = now.strftime("%Y-%m-%d-%H:%M:%S")
-
-
-                f = open("logs/flat_logs.txt","a")
+                f = open(f"logs/flats/{current_time}-PIPELINES_flat_logs-SUCCESS.txt","a")
                 line = "---------------------------------"
-                f.write("\n" + current_time + ": " +"Flat id: "+str(item["id"])+" successfuly added" + "\n" + line + "\n")
+                f.write("\n" + current_time + ": " + "flat id:" + str(item["id"]) + " added" + "\n" + "link id: " + str(item["link_id"]) + "\n" + line + "\n")
                 f.close()
+
+
+
+
 
             except sqlalchemy.exc.IntegrityError:
                 print("INTEGITY ERROR")
@@ -141,9 +149,9 @@ class FlatPipeline(object):
             except Exception as e:
 
 
-                f = open("logs/flat_logs.txt","a")
+                f = open(f"logs/flats/{current_time}-PIPELINES_flat_logs.txt-FAILURE","a")
                 line = "---------------------------------"
-                f.write("\n" + current_time + ": " + str(sys.exc_info()[0]) + "\n" + line + "\n")
+                f.write("\n" + current_time + ": " + str(e) + "\n" + line + "\n")
                 f.close()
 
                 db.session.rollback()
