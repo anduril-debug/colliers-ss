@@ -215,7 +215,7 @@ class FlatSpider(scrapy.Spider):
                 now = datetime.now()
                 current_time = now.strftime("%Y-%m-%d-%H:%M:%S")
 
-                f = open(f"logs/flats/-{running_time}-SPIDER_flat_logs.txt","a")
+                f = open(f"logs/flats/-{running_time}-[SPIDER]-flat_logs.txt","a")
                 line = "---------------------------------"
                 f.write("\n" + current_time + " : " + str(e) + "\n\n" + str(response.url) + "\n" + line + "\n")
                 f.close()
