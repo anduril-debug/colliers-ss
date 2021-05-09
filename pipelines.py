@@ -22,7 +22,7 @@ class FlatLinkPipeline(object):
 
             print("item id:"+str(item["id"])+" added successfuly")
 
-            f = open(f"logs/flat_links/{current_time}-PIPELINES_flat_links_logs-SUCCESS.txt","a")
+            f = open(f"logs/flat_links/{current_time}-[PIPELINES]-flat_links_logs-SUCCESS.txt","a")
             line = "---------------------------------"
             f.write("\n" + current_time + ": " + "link id: " + str(item["id"]) + " successfuly added." + "\n" + line + "\n")
             f.close()
@@ -36,7 +36,7 @@ class FlatLinkPipeline(object):
 
         except Exception as e:
 
-            f = open(f"logs/flat_links/{current_time}-PIPELINES_flat_links_logs.txt","a")
+            f = open(f"logs/flat_links/{current_time}-[PIPELINES]-flat_links_logs.txt","a")
             line = "---------------------------------"
             f.write("\n" + current_time + ": " + str(e) +"\n" + line + "\n")
             f.close()
@@ -132,7 +132,7 @@ class FlatPipeline(object):
                 db.session.commit()
                 print("flad id: "+str(item["id"])+" successfuly added")
 
-                f = open(f"logs/flats/{current_time}-PIPELINES_flat_logs-SUCCESS.txt","a")
+                f = open(f"logs/flats/{current_time}-[PIPELINES]-flat_logs-SUCCESS.txt","a")
                 line = "---------------------------------"
                 f.write("\n" + current_time + ": " + "flat id:" + str(item["id"]) + " added" + "\n" + "link id: " + str(item["link_id"]) + "\n" + line + "\n")
                 f.close()
@@ -149,7 +149,7 @@ class FlatPipeline(object):
             except Exception as e:
 
 
-                f = open(f"logs/flats/{current_time}-PIPELINES_flat_logs.txt-FAILURE","a")
+                f = open(f"logs/flats/{current_time}-[PIPELINES]-flat_logs.txt-FAILURE","a")
                 line = "---------------------------------"
                 f.write("\n" + current_time + ": " + str(e) + "\n" + line + "\n")
                 f.close()
