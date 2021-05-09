@@ -7,6 +7,7 @@ class FlatLinkItem(Item):
 class FlatItem(Item):
 
     id = Field()
+    link_id = Field()
     link = Field()
     header = Field()
     city = Field()
