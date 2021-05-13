@@ -101,6 +101,7 @@ class House(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
     link_id = db.Column(db.Integer, db.ForeignKey('house_link.id',ondelete="CASCADE"))
+    header = db.Column(db.String(256))
 
     code = db.Column(db.String(256))
     time = db.Column(db.String(16))
