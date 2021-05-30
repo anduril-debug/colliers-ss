@@ -16,7 +16,7 @@ soup = BeautifulSoup(response.content,'html.parser')
 buttons = soup.find('div', class_="latest_all_adds")
 last_li = buttons.find('li', "last")
 
-pagination = int(last_li.a.text)
+pagination = int(last_li.a.text)+1
 
 
 class FlatLinkSpider(scrapy.Spider):
