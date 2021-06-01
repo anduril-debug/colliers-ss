@@ -166,3 +166,46 @@ class House(db.Model):
 
     def __repr__(self):
         return f"{self.id}"
+
+
+
+
+
+
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    districts = db.relationship("District",uselist=False, backref = 'city',cascade="all, delete")
+
+    def __repr__(self):
+        return f"{self.name}"
+
+
+class District(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    city_id = db.Column(db.Integer, db.ForeignKey("city.id"))
+    subdistricts = db.relationship("Subdistrict",uselist=False, backref = 'district',cascade="all, delete")
+
+    def __repr__(self):
+        return f"{self.name}"
+
+
+
+class Subdistrict(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    district_id = db.Column(db.Integer, db.ForeignKey("district.id"))
+    streets = db.relationship("Street",uselist=False, backref = 'subdistrict',cascade="all, delete")
+
+    def __repr__(self):
+        return f"{self.name}"
+
+
+class Street(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    subdistrict_id = db.Column(db.Integer, db.ForeignKey("subdistrict.id"))
+
+    def __repr__(self):
+        return f"{self.name}"
