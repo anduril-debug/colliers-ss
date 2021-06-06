@@ -108,12 +108,16 @@ class FlatRemodelPipeline(object):
 
             try:
 
-
-
-                address = Street.query.filter(Street.name == item["address"]).first()
-                subdistrict = address.subdistrict
-                district = subdistrict.district
-                city = district.city
+                try:
+                    address = Street.query.filter(Street.name == item["address"]).first()
+                    subdistrict = address.subdistrict
+                    district = subdistrict.district
+                    city = district.city
+                except:
+                    address = Street.query.filter(Street.id == 9999).first()
+                    subdistrict = address.subdistrict
+                    district = subdistrict.district
+                    city = district.city
 
 
 
@@ -121,11 +125,14 @@ class FlatRemodelPipeline(object):
                             id = int(item["id"]), link_id = int(item["link_id"]),header = item["header"],time = item["time"], total_area = float(item["total_area"]),
                             rooms = float(item["rooms"]),bedrooms = item["bedrooms"],stage = int(item["stage"]),total_stages = int(item["total_stages"]),
                             balcony_loggia = item["balcony_loggia"], bathtubs = item["bathtubs"],project = item["project"],state = item["state"], status = item["status"],
-                            latitude = latitude,longitude =longitude,garage = item["garage"],basement = item["basement"],stockroom = item["stockroom"],
+                            garage = item["garage"],basement = item["basement"],stockroom = item["stockroom"],
                             gas = item["gas"],central_heating = item["central_heating"],price = item["price"], currency = item["currency"],
                             price_per_m2 = item["price_per_m2"],seller = item["seller"],
+                            administrative_area_level_1 = item["administrative_area_level_1"],
+                            administrative_area_level_2 = item["administrative_area_level_2"],
+                            administrative_area_level_3 = item["administrative_area_level_3"],
+                            administrative_area_level_4 = item["administrative_area_level_4"],
                             address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name
-
                             )
 
                 db.session.add(flat)
@@ -180,10 +187,16 @@ class HouseRemodelPipeline(object):
 
             try:
 
-                address = Street.query.filter(Street.name == item["address"]).first()
-                subdistrict = address.subdistrict
-                district = subdistrict.district
-                city = district.city
+                try:
+                    address = Street.query.filter(Street.name == item["address"]).first()
+                    subdistrict = address.subdistrict
+                    district = subdistrict.district
+                    city = district.city
+                except:
+                    address = Street.query.filter(Street.id == 9999).first()
+                    subdistrict = address.subdistrict
+                    district = subdistrict.district
+                    city = district.city
 
 
                 house = HouseRemodel(
@@ -193,8 +206,11 @@ class HouseRemodelPipeline(object):
                             stockroom = item["stockroom"], water = item["water"], gas = item["gas"],central_heating = item["central_heating"],
                             price = item["price"], currency = item["currency"],pool = item["pool"],
                             price_per_m2 = item["price_per_m2"],seller = item["seller"],
+                            administrative_area_level_1 = item["administrative_area_level_1"],
+                            administrative_area_level_2 = item["administrative_area_level_2"],
+                            administrative_area_level_3 = item["administrative_area_level_3"],
+                            administrative_area_level_4 = item["administrative_area_level_4"],
                             address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name)
-
 
                 db.session.add(house)
                 db.session.commit()

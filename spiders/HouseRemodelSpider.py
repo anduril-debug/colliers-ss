@@ -1,5 +1,5 @@
 import scrapy
-from items import HouseItem
+from items_remodel import HouseRemodelItem
 from sitkva import db
 from sitkva.models import HouseLinkRemodel
 from pipelines_remodel import HouseRemodelPipeline
@@ -14,7 +14,7 @@ running_time = now.strftime("%Y-%m-%d-%H:%M:%S")
 
 
 
-class HouseSpider(scrapy.Spider):
+class HouseRemodelSpider(scrapy.Spider):
 
     name = "house"
 
@@ -41,9 +41,6 @@ class HouseSpider(scrapy.Spider):
             else:
                 full_address = "UNKNOW"
                 address = "UNKNOW"
-
-
-
 
             main_details = {
                 "სახლის ფართი" : "-1",
@@ -157,10 +154,33 @@ class HouseSpider(scrapy.Spider):
             id = response.css("#main-body > div.all_page_blocks > div.container.realestateDtlSlider > div.col-md-9.col-xs-9.DetailedMd9 > div.detailed_article_body > div.DetailedPageAllBodyBLock > div.DetailedLeftAll > div.article_head_block.flex-center > div.LeftHeadBlock.veri-block > div > span::text").get()
 
 
+            administrative_areas = {
+                "area_1" : "",
+                "area_2" : "",
+                "area_3" : "",
+                "area_4" : ""
+            }
+
+            info_address = response.css("div.detailed_page_navlist")
+            ul_address = info_address.css("ul")
+            li_address = ul_address.css("li")
+            a_address = li_address.css("a::text")
+
+            for i in range(len(a_address[3:])):
+                administrative_areas[f"area_{i+1}"] = a_address[3:].get().strip()
 
 
-            house = HouseItem(  id = int(id), link_id = int(id),
-                                header = header,address = full_address,time = time, code = code,
+
+
+            house = HouseRemodelItem(  id = int(id), link_id = int(id),
+                                header = header,time = time, code = code,
+                                address = full_address,
+                                administrative_area_level_1 = administrative_areas["area_1"],
+                                administrative_area_level_2 = administrative_areas["area_2"],
+                                administrative_area_level_3 = administrative_areas["area_3"],
+                                administrative_area_level_4 = administrative_areas["area_4"],
+
+
                                 total_area = main_details["სახლის ფართი"], rooms = main_details["ოთახები"],garden_area = details["ეზოს ფართი"].split("m")[0], bedrooms = main_details["საძინებლები"],
                                 state = details["მდგომარეობა"], status = details["სტატუსი"],pool = additional_info["აუზით"],
                                 balcony_loggia = additional_info["აივანი"],

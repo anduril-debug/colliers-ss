@@ -1,5 +1,5 @@
 import scrapy
-from items import FlatItem
+from items_remodel import FlatRemodelItem
 from sitkva import db
 from sitkva.models import FlatLinkRemodel
 from pipelines_remodel import FlatRemodelPipeline
@@ -12,7 +12,7 @@ running_time = now.strftime("%Y-%m-%d-%H:%M:%S")
 
 
 
-class FlatSpider(scrapy.Spider):
+class FlatRemodelSpider(scrapy.Spider):
 
     name = "flat"
 
@@ -26,7 +26,7 @@ class FlatSpider(scrapy.Spider):
             id_div = response.css('div.article_item_id')
             id = int(id_div.css('span::text').get())
 
-            link = FlatLink.query.filter_by(id = id).first()
+            link = FlatLinkRemodel.query.filter_by(id = id).first()
             link_id = link.id
 
 
@@ -34,6 +34,7 @@ class FlatSpider(scrapy.Spider):
 
             time_div = response.css('div.add_date_block::text').get()
             time = time_div.split('/')[0].strip()
+
 
             address_div = response.css('div.StreeTaddressList')
 
@@ -47,6 +48,8 @@ class FlatSpider(scrapy.Spider):
                 address = "UNKNOW"
                 city_div = response.css("div.article_in_title")
                 city = city_div.css('h1::text').get().split()[-1]
+
+
 
 
 
@@ -180,6 +183,22 @@ class FlatSpider(scrapy.Spider):
 
 
 
+            administrative_areas = {
+                "area_1" : "",
+                "area_2" : "",
+                "area_3" : "",
+                "area_4" : ""
+            }
+
+            info_address = response.css("div.detailed_page_navlist")
+            ul_address = info_address.css("ul")
+            li_address = ul_address.css("li")
+            a_address = li_address.css("a::text")
+
+            for i in range(len(a_address[3:])):
+                administrative_areas[f"area_{i+1}"] = a_address[3:].get().strip()
+
+
 
             for stage in multi_stages:
 
@@ -188,7 +207,14 @@ class FlatSpider(scrapy.Spider):
                 uid += str(stage)
 
 
-                flat = FlatItem(id = int(uid),link_id = id, link = response.request.url, header = header, city = city, address = full_address,time = time,
+                flat = FlatRemodelItem(id = int(uid),link_id = id, link = response.request.url, header = header, time = time,
+
+                            city = city, address = full_address,
+                            administrative_area_level_1 = administrative_areas["area_1"],
+                            administrative_area_level_2 = administrative_areas["area_2"],
+                            administrative_area_level_3 = administrative_areas["area_3"],
+                            administrative_area_level_4 = administrative_areas["area_4"],
+
                             total_area = main_details["საერთო ფართი"], rooms = float(main_details["ოთახები"]), bedrooms = float(main_details["საძინებლები"]),
                             stage = stage, total_stages = total_stages, balcony_loggia = details["აივანი/ლოჯია"],
                             bathtubs = details["სველი წერტილი"], project = details["პროექტი"], state = details["მდგომარეობა"], status = details["სტატუსი"],

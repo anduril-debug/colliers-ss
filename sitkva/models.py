@@ -238,10 +238,18 @@ class FlatRemodel(db.Model):
     stage = db.Column(db.Integer)
     total_stages = db.Column(db.Integer)
 
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+    administrative_area_level_3 = db.Column(db.String(128))  ### subdistrictebi
+    administrative_area_level_4 = db.Column(db.String(128))  ### addressebi
+
+
     city = db.Column(db.String(128))
     district = db.Column(db.String(128))
     subdistrict = db.Column(db.String(128))
     address = db.Column(db.String(128))
+
 
 
 
@@ -303,6 +311,12 @@ class HouseRemodel(db.Model):
     code = db.Column(db.String(256))
     time = db.Column(db.String(16))
 
+
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+    administrative_area_level_3 = db.Column(db.String(128))  ### subdistrictebi
+    administrative_area_level_4 = db.Column(db.String(128))  ### addressebi
 
 
 
