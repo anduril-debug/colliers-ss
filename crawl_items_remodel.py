@@ -9,8 +9,8 @@ from scrapy.utils.log import configure_logging
 
 configure_logging()
 runner = CrawlerRunner()
-runner.crawl(FlatLinkRemodelSpider)
-runner.crawl(HouseLinkRemodelSpider)
+runner.crawl(FlatRemodelSpider)
+runner.crawl(HouseRemodelSpider)
 d = runner.join()
 d.addBoth(lambda _: reactor.stop())
 
