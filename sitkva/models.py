@@ -175,7 +175,7 @@ class House(db.Model):
 class City(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
-    districts = db.relationship("District",uselist=False, backref = 'city',cascade="all, delete")
+    districts = db.relationship("District", backref = 'city',cascade="all, delete")
 
     def __repr__(self):
         return f"{self.name}"
@@ -185,7 +185,7 @@ class District(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     city_id = db.Column(db.Integer, db.ForeignKey("city.id"))
-    subdistricts = db.relationship("Subdistrict",uselist=False, backref = 'district',cascade="all, delete")
+    subdistricts = db.relationship("Subdistrict", backref = 'district',cascade="all, delete")
 
     def __repr__(self):
         return f"{self.name}"
@@ -196,7 +196,7 @@ class Subdistrict(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     district_id = db.Column(db.Integer, db.ForeignKey("district.id"))
-    streets = db.relationship("Street",uselist=False, backref = 'subdistrict',cascade="all, delete")
+    streets = db.relationship("Street", backref = 'subdistrict',cascade="all, delete")
 
     def __repr__(self):
         return f"{self.name}"
@@ -209,3 +209,159 @@ class Street(db.Model):
 
     def __repr__(self):
         return f"{self.name}"
+
+
+
+class FlatLinkRemodel(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    link = db.Column(db.String)
+    flat = db.relationship('FlatRemodel', uselist=False, backref = 'flat_link_remodel',cascade="all, delete")
+    def __repr__(self):
+        return f"id: {self.id}"
+
+
+
+
+
+
+class FlatRemodel(db.Model):
+
+    id = db.Column(db.Integer, primary_key = True)
+    link_id = db.Column(db.Integer, db.ForeignKey('flat_link_remodel.id',ondelete="CASCADE"))
+    header = db.Column(db.String(256))
+    time = db.Column(db.String(16))
+
+    #main details
+    total_area = db.Column(db.Float)
+    rooms = db.Column(db.Float)
+    bedrooms = db.Column(db.String(128))
+    stage = db.Column(db.Integer)
+    total_stages = db.Column(db.Integer)
+
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+    administrative_area_level_3 = db.Column(db.String(128))  ### subdistrictebi
+    administrative_area_level_4 = db.Column(db.String(128))  ### addressebi
+
+
+    city = db.Column(db.String(128))
+    district = db.Column(db.String(128))
+    subdistrict = db.Column(db.String(128))
+    address = db.Column(db.String(128))
+
+
+
+
+
+    #all details
+    balcony_loggia = db.Column(db.String(128))
+    bathtubs = db.Column(db.String(128))
+    project = db.Column(db.String(128))
+    state = db.Column(db.String(128))
+    status = db.Column(db.String(128))
+
+    #address
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    #additional information
+
+    garage = db.Column(db.String(64))
+    basement = db.Column(db.String(64))
+    stockroom = db.Column(db.String(64))
+    gas = db.Column(db.String(64))
+    central_heating = db.Column(db.String(64))
+
+
+    #price and seller
+    price = db.Column(db.String(128))
+    currency = db.Column(db.String(64))
+    price_per_m2 = db.Column(db.String(128))
+    seller = db.Column(db.String(64))
+
+
+    #ფიზიკური პირი, უძრავი ქონების აგენტი, უძრავი ქონების სააგენტო, სამშენებლო კომპანია
+
+
+    def __repr__(self):
+        return f"{self.id}"
+
+
+
+
+class HouseLinkRemodel(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    link = db.Column(db.String)
+    house = db.relationship('HouseRemodel', uselist=False, backref = 'house_link_remodel',cascade="all, delete")
+
+
+    def __repr__(self):
+        return f"id: {self.id}"
+
+
+
+class HouseRemodel(db.Model):
+
+    id = db.Column(db.Integer, primary_key = True)
+    link_id = db.Column(db.Integer, db.ForeignKey('house_link_remodel.id',ondelete="CASCADE"))
+    header = db.Column(db.String(256))
+
+    code = db.Column(db.String(256))
+    time = db.Column(db.String(16))
+
+
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+    administrative_area_level_3 = db.Column(db.String(128))  ### subdistrictebi
+    administrative_area_level_4 = db.Column(db.String(128))  ### addressebi
+
+
+
+    city = db.Column(db.String(128))
+    district = db.Column(db.String(128))
+    subdistrict = db.Column(db.String(128))
+    address = db.Column(db.String(128))
+
+
+
+    #main details
+    total_area = db.Column(db.Float)
+    rooms = db.Column(db.Float)
+    bedrooms = db.Column(db.String(128))
+    garden_area = db.Column(db.Float)
+    state = db.Column(db.String(128))
+    status = db.Column(db.String(128))
+
+
+    #all details
+
+    pool = db.Column(db.String(64))
+    garage = db.Column(db.String(64))
+    balcony_loggia = db.Column(db.String(64))
+    basement = db.Column(db.String(64))
+    stockroom = db.Column(db.String(64))
+    gas = db.Column(db.String(64))
+    water = db.Column(db.String(64))
+    central_heating = db.Column(db.String(64))
+
+    #address
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+
+    #price and seller
+    price = db.Column(db.String(128))
+    currency = db.Column(db.String(64))
+    price_per_m2 = db.Column(db.String(128))
+    seller = db.Column(db.String(64))
+
+
+    #ფიზიკური პირი, უძრავი ქონების აგენტი, უძრავი ქონების სააგენტო, სამშენებლო კომპანია
+
+
+    def __repr__(self):
+        return f"{self.id}"

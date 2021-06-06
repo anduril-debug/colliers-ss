@@ -1,16 +1,22 @@
-from sitkva.models import *
-from sitkva import db
+import scrapy
+from scrapy.crawler import CrawlerProcess
 
+class MySpider1(scrapy.Spider):
+    name = "test"
+    start_urls = [
+        'https://ss.ge/ka/udzravi-qoneba/iyideba-mitsis-nakveti-abashashi-3877911',
+    ]
 
-subdistricts = ["აბანოთუბანი","ავლაბარი","ელია","ვერა","მთაწმინდა","სოლოლაკი"]
+    def parse(self, response):
+        info = response.css("div.detailed_page_navlist")
+        ul = info.css("ul")
+        lis = ul.css("li")
+        a = lis.css("a::text")
 
+        for i in a[3:]:
+            print("###")
+            print(i.get().strip())
 
-
-
-j = 1
-
-for i in subdistricts:
-    sd = Subdistrict(id = 500+j, name = i,district_id = 105)
-    j += 1
-    db.session.add(sd)
-    db.session.commit()
+process = CrawlerProcess()
+process.crawl(MySpider1)
+process.start()

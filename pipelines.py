@@ -1,4 +1,4 @@
-from sitkva.models import FlatLink,HouseLink,Flat,House
+from sitkva.models import FlatLink,HouseLink,Flat,House,Street,Subdistrict,District,City,FlatRemodel,FlatRemodelLink
 from sitkva import db
 import requests
 from datetime import datetime
