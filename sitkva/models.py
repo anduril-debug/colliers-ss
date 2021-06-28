@@ -206,10 +206,24 @@ class Street(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     subdistrict_id = db.Column(db.Integer, db.ForeignKey("subdistrict.id"))
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
+
 
     def __repr__(self):
         return f"{self.name}"
 
+
+
+class OutsideTbilisi(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(128))
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
+
+
+    def __repr__(self):
+        return f"{self.name}"
 
 
 class FlatLinkRemodel(db.Model):

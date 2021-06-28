@@ -179,8 +179,6 @@ class HouseRemodelSpider(scrapy.Spider):
                                 administrative_area_level_2 = administrative_areas["area_2"],
                                 administrative_area_level_3 = administrative_areas["area_3"],
                                 administrative_area_level_4 = administrative_areas["area_4"],
-
-
                                 total_area = main_details["სახლის ფართი"], rooms = main_details["ოთახები"],garden_area = details["ეზოს ფართი"].split("m")[0], bedrooms = main_details["საძინებლები"],
                                 state = details["მდგომარეობა"], status = details["სტატუსი"],pool = additional_info["აუზით"],
                                 balcony_loggia = additional_info["აივანი"],
