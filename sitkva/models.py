@@ -379,3 +379,94 @@ class HouseRemodel(db.Model):
 
     def __repr__(self):
         return f"{self.id}"
+
+
+class AdministrativeArea(db.Model):
+    administrative_area_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    latitude = db.Column(db.String(64))
+    longitude = db.Column(db.String(64))
+
+    def __repr__(self):
+        return f"{self.name}"
+
+
+class FlatTmpColliersOutsideTbilisi(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    time = db.Column(db.String(16))
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+
+
+    city = db.Column(db.String(128))
+    district = db.Column(db.String(128))
+    subdistrict = db.Column(db.String(128))
+    address = db.Column(db.String(128))
+
+
+
+    #main details
+    total_area = db.Column(db.Float)
+    rooms = db.Column(db.Float)
+    bedrooms = db.Column(db.String(128))
+    garden_area = db.Column(db.Float)
+    state = db.Column(db.String(128))
+    status = db.Column(db.String(128))
+
+
+    #all details
+
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+
+    #price and seller
+    price = db.Column(db.String(128))
+    currency = db.Column(db.String(64))
+    price_per_m2 = db.Column(db.String(128))
+
+
+    def __repr__(self):
+        return f"{self.id}"
+
+
+class FlatTmpColliersTbilisi(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    time = db.Column(db.String(16))
+
+    administrative_area_level_1 = db.Column(db.String(128))  ###qalaqi - municipaliteti
+    administrative_area_level_2 = db.Column(db.String(128))  ###districtebi - soflebi
+
+
+    city = db.Column(db.String(128))
+    district = db.Column(db.String(128))
+    subdistrict = db.Column(db.String(128))
+    address = db.Column(db.String(128))
+
+
+
+    #main details
+    total_area = db.Column(db.Float)
+    rooms = db.Column(db.Float)
+    bedrooms = db.Column(db.String(128))
+    garden_area = db.Column(db.Float)
+    state = db.Column(db.String(128))
+    status = db.Column(db.String(128))
+
+    #all details
+
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+
+    #price and seller
+    price = db.Column(db.String(128))
+    currency = db.Column(db.String(64))
+    price_per_m2 = db.Column(db.String(128))
+
+
+    def __repr__(self):
+        return f"{self.id}"
