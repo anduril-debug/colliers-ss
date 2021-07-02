@@ -5,6 +5,8 @@ import os
 import pyodbc
 import datetime
 import json
+from sitkva import db
+from sitkva.models import FlatRemodel,HouseRemodel
 
 
 ## modeling and projects standarts
@@ -140,7 +142,7 @@ def create_local_tmp_flats(cursor,conn):
                     		INTO flat_tmp_colliers_outside_tbilisi
                     FROM flat_remodel
                     LEFT JOIN administrative_area ON flat_remodel.administrative_area_level_1 = administrative_area.name
-                    WHERE flat_remodel.administrative_area_level_1 != 'თბილისი';
+                    WHERE flat_remodel.administrative_area_level_1 != 'თბილისი' AND flat_remodel.is_used = 'no';
 
                     ALTER TABLE flat_tmp_colliers_outside_tbilisi
                     ADD COLUMN property varchar(255) DEFAULT 'ბინა',
@@ -167,7 +169,7 @@ def create_local_tmp_flats(cursor,conn):
                     		INTO flat_tmp_colliers_tbilisi
                     FROM flat_remodel
                     LEFT JOIN street ON flat_remodel.address=street.name
-                    WHERE flat_remodel.city = 'თბილისი';
+                    WHERE flat_remodel.city = 'თბილისი' AND flat_remodel.is_used = 'no';
 
 
                     ALTER TABLE flat_tmp_colliers_tbilisi
@@ -199,7 +201,7 @@ def create_local_tmp_houses(cursor,conn):
                     		INTO house_tmp_colliers_outside_tbilisi
                     FROM house_remodel
                     LEFT JOIN administrative_area ON house_remodel.administrative_area_level_1 = administrative_area.name
-                    WHERE house_remodel.administrative_area_level_1 != 'თბილისი';
+                    WHERE house_remodel.administrative_area_level_1 != 'თბილისი' AND house_remodel.is_used = 'no';
 
                     ALTER TABLE house_tmp_colliers_outside_tbilisi
                     ADD COLUMN property varchar(255) DEFAULT 'სახლი',
@@ -226,7 +228,7 @@ def create_local_tmp_houses(cursor,conn):
                     		INTO house_tmp_colliers_tbilisi
                     FROM house_remodel
                     LEFT JOIN street ON house_remodel.address=street.name
-                    WHERE house_remodel.city = 'თბილისი';
+                    WHERE house_remodel.city = 'თბილისი' AND house_remodel.is_used = 'no';
 
 
                     ALTER TABLE house_tmp_colliers_tbilisi
@@ -255,6 +257,9 @@ def create_local_tmp_houses(cursor,conn):
 def insert_into_ms_sql_flats(items,colliers_cursor):
     for i in items:
         try:
+
+            flat = FlatRemodel.query.filter(FlatRemodel.id == i[0]).first()
+
             #converting time from dd.mm.YYYY to YYYY-mm-dd
             time = i[1].strip()
             time = datetime.datetime.strptime(time,"%d.%m.%Y").strftime("%Y-%m-%d")
@@ -269,10 +274,6 @@ def insert_into_ms_sql_flats(items,colliers_cursor):
                 currency = "$"
 
 
-
-            print("\t")
-            print(i)
-            print("\t")
             remodeling = i[11].split(',')
             if len(remodeling) > 1:
                 continue
@@ -284,6 +285,12 @@ def insert_into_ms_sql_flats(items,colliers_cursor):
                                     i[22] or None,i[23] or None,i[24] or None,i[25] or None,i[26] or None,i[27] or None,i[28] or None)
 
             colliers_cursor.commit()
+
+            flat.is_used = "yes"
+            db.session.add(flat)
+            db.session.commit()
+
+
             print(f"{i[18]} has been added -- {i[6]}")
         except Exception as e:
             print("error",e)
@@ -296,24 +303,16 @@ def insert_into_ms_sql_flats(items,colliers_cursor):
 
 
 
-
-
-
-
-
-
-
-
-
 def insert_into_ms_sql_houses(items, colliers_cursor):
     for i in items:
         try:
+            house = HouseRemodel.query.filter(HouseRemodel.id == i[0]).first()
             #converting time from dd.mm.YYYY to YYYY-mm-dd
             time = i[1].strip()
             time = datetime.datetime.strptime(time,"%d.%m.%Y").strftime("%Y-%m-%d")
-            price = float(i[14])
-            price_per_m2 = i[15]
-            currency = i[16].strip()
+            price = float(i[13])
+            price_per_m2 = i[14]
+            currency = i[15].strip()
 
             #converting price
             if currency == "U":
@@ -323,28 +322,29 @@ def insert_into_ms_sql_houses(items, colliers_cursor):
 
 
 
-            remodeling = i[10].split(',')
+            remodeling = i[9].split(',')
             if len(remodeling) > 1:
                 continue
 
-            sql_inser = "INSERT INTO ss_houses VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            sql_inser = "INSERT INTO ss_houses VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
             colliers_cursor.execute(sql_inser,i[0],time or None,i[2] or None,i[3] or None,i[4] or None,
                                     i[5] or None,i[6].strip() or None,i[7] or None,
                                     i[8]or None,modeling[remodeling[0].strip()] or None,projects_types[i[10].strip()] or None,i[11] or None,
-                                    i[12] or None,i[13] or None,price or None,price_per_m2 or None,currency or None,i[17] or None,i[18] or None,i[19] or None,
+                                    i[12] or None,price or None,price_per_m2 or None,currency or None,i[16] or None,i[17] or None,i[18] or None,i[19] or None,
                                     i[20] or None,i[21] or None,i[22]or None,i[23]or None,i[24]or None,i[25]or None,
-                                    i[26] or None, i[27] or None)
+                                    i[26] or None)
 
             colliers_cursor.commit()
+
+            house.is_used = "yes"
+            db.session.add(house)
+            db.session.commit()
+
+
             print(f"{i[16]} has been added -- {i[5]}")
         except Exception as e:
             print("error",e)
             continue
-
-
-
-
-
 
 
 

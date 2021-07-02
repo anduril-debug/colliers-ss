@@ -298,6 +298,7 @@ class FlatRemodel(db.Model):
 
     #ფიზიკური პირი, უძრავი ქონების აგენტი, უძრავი ქონების სააგენტო, სამშენებლო კომპანია
 
+    is_used = db.Column(db.String(32))
 
     def __repr__(self):
         return f"{self.id}"
@@ -375,6 +376,7 @@ class HouseRemodel(db.Model):
 
 
     #ფიზიკური პირი, უძრავი ქონების აგენტი, უძრავი ქონების სააგენტო, სამშენებლო კომპანია
+    is_used = db.Column(db.String(32))
 
 
     def __repr__(self):

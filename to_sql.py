@@ -61,7 +61,7 @@ except Exception as e:
 cursor.execute("SELECT * FROM flat_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით'")
 flats_outside_tbilisi = cursor.fetchall()
 
-cursor.execute("SELECT * FROM house_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით'")
+cursor.execute("SELECT * FROM house_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით' ")
 houses_outside_tbilisi = cursor.fetchall()
 
 cursor.execute("SELECT * FROM flat_tmp_colliers_tbilisi WHERE price != 'შეთანხმებით'")
@@ -74,10 +74,10 @@ houses_tbilisi = cursor.fetchall()
 
 try:
     print("Start inserting....")
-    # insert_into_ms_sql_houses(houses_tbilisi,colliers_cursor)
-    # insert_into_ms_sql_houses(houses_outside_tbilisi,colliers_cursor)
+    insert_into_ms_sql_houses(houses_tbilisi,colliers_cursor)
+    insert_into_ms_sql_houses(houses_outside_tbilisi,colliers_cursor)
     insert_into_ms_sql_flats(flats_outside_tbilisi,colliers_cursor)
-    # insert_into_ms_sql_flats(flats_tbilisi,colliers_cursor)
+    insert_into_ms_sql_flats(flats_tbilisi,colliers_cursor)
 
 except Exception as e:
     print(e)
