@@ -8,7 +8,7 @@ import json
 
 import datetime
 
-from to_sql_additionals import usd_to_gel,connect_to_colliers_db,connect_to_local_db,create_local_tmp_flats,drop_local_tmp_flats,drop_local_tmp_houses,insert_into_ms_sql_flats,insert_into_ms_sql_houses,create_local_tmp_houses
+from to_sql_additionals import usd_to_gel,connect_to_colliers_db,connect_to_local_db,create_local_tmp_flats,drop_local_tmps,insert_into_ms_sql_flats,insert_into_ms_sql_houses,create_local_tmp_houses
 
 
 
@@ -40,9 +40,6 @@ except Exception as e:
 
 
 try:
-    # drop_local_tmp_flats(cursor,conn)
-    # drop_local_tmp_houses(cursor,conn)
-
 
     print("Creating tmps...")
     create_local_tmp_flats(cursor,conn)
@@ -69,6 +66,8 @@ flats_tbilisi = cursor.fetchall()
 
 cursor.execute("SELECT * FROM house_tmp_colliers_tbilisi WHERE price != 'შეთანხმებით'")
 houses_tbilisi = cursor.fetchall()
+print(str(len(flats_tbilisi) + len(flats_outside_tbilisi) + len(houses_tbilisi) + len(houses_outside_tbilisi)) + " item to store")
+
 
 
 
@@ -81,16 +80,13 @@ try:
 
 except Exception as e:
     print(e)
-    drop_local_tmp_flats(cursor,conn)
-    drop_local_tmp_houses(cursor,conn)
+    drop_local_tmps(cursor,conn)
     raise e
 
 
 
 ###delete tmp tables
-drop_local_tmp_flats(cursor,conn)
-drop_local_tmp_houses(cursor,conn)
-print("tmp tables has been removed!")
+drop_local_tmps(cursor,conn)
 colliers_cursor.commit()
 colliers_cursor.close()
 cursor.close()

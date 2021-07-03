@@ -9,6 +9,10 @@ from sitkva import db
 from sitkva.models import FlatRemodel,HouseRemodel
 
 
+now = datetime.datetime.now()
+current_time = now.strftime("%Y-%m-%d-%H:%M")
+
+
 ## modeling and projects standarts
 
 modeling = {
@@ -160,7 +164,6 @@ def create_local_tmp_flats(cursor,conn):
 
                 """)
 
-
     cursor.execute("""
                     SELECT flat_remodel.id,flat_remodel.time,flat_remodel.total_area,flat_remodel.rooms,flat_remodel.stage,flat_remodel.total_stages,
                     		flat_remodel.administrative_area_level_1,flat_remodel.district,
@@ -169,7 +172,7 @@ def create_local_tmp_flats(cursor,conn):
                     		INTO flat_tmp_colliers_tbilisi
                     FROM flat_remodel
                     LEFT JOIN street ON flat_remodel.address=street.name
-                    WHERE flat_remodel.city = 'თბილისი' AND flat_remodel.is_used = 'no';
+                    WHERE flat_remodel.administrative_area_level_1 = 'თბილისი' AND flat_remodel.is_used = 'no' ;
 
 
                     ALTER TABLE flat_tmp_colliers_tbilisi
@@ -187,7 +190,6 @@ def create_local_tmp_flats(cursor,conn):
 
 
                 """)
-
     conn.commit()
     print("tmp flats has been created...")
 
@@ -219,7 +221,6 @@ def create_local_tmp_houses(cursor,conn):
 
                 """)
 
-
     cursor.execute("""
                     SELECT house_remodel.id,house_remodel.time,house_remodel.total_area,house_remodel.garden_area,house_remodel.rooms,
                     		house_remodel.administrative_area_level_1,house_remodel.district,
@@ -228,7 +229,7 @@ def create_local_tmp_houses(cursor,conn):
                     		INTO house_tmp_colliers_tbilisi
                     FROM house_remodel
                     LEFT JOIN street ON house_remodel.address=street.name
-                    WHERE house_remodel.city = 'თბილისი' AND house_remodel.is_used = 'no';
+                    WHERE house_remodel.administrative_area_level_1 = 'თბილისი' AND house_remodel.is_used = 'no';
 
 
                     ALTER TABLE house_tmp_colliers_tbilisi
@@ -243,10 +244,7 @@ def create_local_tmp_houses(cursor,conn):
                     ADD COLUMN parent_developer varchar(255) DEFAULT '',
                     ADD COLUMN completion_period varchar(255) DEFAULT '',
                     ADD COLUMN is_mp_overall varchar(255) DEFAULT '';
-
-
                 """)
-
 
     conn.commit()
     print("tmp houses has been created...")
@@ -294,9 +292,11 @@ def insert_into_ms_sql_flats(items,colliers_cursor):
             print(f"{i[18]} has been added -- {i[6]}")
         except Exception as e:
             print("error",e)
+            f = open(f"logs/colliers/{current_time}-[insert_into_ms_sql_flats].txt","a")
+            line = "---------------------------------"
+            f.write("\n" + str(e) + "\n")
+            f.close()
             continue
-
-
 
 
 
@@ -328,7 +328,7 @@ def insert_into_ms_sql_houses(items, colliers_cursor):
 
             sql_inser = "INSERT INTO ss_houses VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
             colliers_cursor.execute(sql_inser,i[0],time or None,i[2] or None,i[3] or None,i[4] or None,
-                                    i[5] or None,i[6].strip() or None,i[7] or None,
+                                    i[5] or None,i[6] or None,i[7] or None,
                                     i[8]or None,modeling[remodeling[0].strip()] or None,projects_types[i[10].strip()] or None,i[11] or None,
                                     i[12] or None,price or None,price_per_m2 or None,currency or None,i[16] or None,i[17] or None,i[18] or None,i[19] or None,
                                     i[20] or None,i[21] or None,i[22]or None,i[23]or None,i[24]or None,i[25]or None,
@@ -344,6 +344,10 @@ def insert_into_ms_sql_houses(items, colliers_cursor):
             print(f"{i[16]} has been added -- {i[5]}")
         except Exception as e:
             print("error",e)
+            f = open(f"logs/colliers/{current_time}-[insert_into_ms_sql_houses].txt","a")
+            line = "---------------------------------"
+            f.write("\n" + str(e) + "\n")
+            f.close()
             continue
 
 
@@ -358,21 +362,11 @@ def insert_into_ms_sql_houses(items, colliers_cursor):
 
 
 
-def drop_local_tmp_flats(cursor,conn):
+def drop_local_tmps(cursor,conn):
     try:
         cursor.execute("""
                         DROP TABLE flat_tmp_colliers_outside_tbilisi;
                         DROP TABLE flat_tmp_colliers_tbilisi;
-                    """)
-        conn.commit()
-        print("local tmp tables has been removed...")
-    except Exception as e:
-        print(e)
-
-
-def drop_local_tmp_houses(cursor,conn):
-    try:
-        cursor.execute("""
                         DROP TABLE house_tmp_colliers_outside_tbilisi;
                         DROP TABLE house_tmp_colliers_tbilisi;
                     """)

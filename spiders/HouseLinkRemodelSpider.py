@@ -27,7 +27,7 @@ class HouseLinkRemodelSpider(scrapy.Spider):
     name = "house_links"
 
     start_urls = [
-        f"https://ss.ge/ka/udzravi-qoneba/l/kerdzo-saxli/iyideba?Page={i}&RealEstateTypeId=4&RealEstateDealTypeId=4&StatusField.FieldId=34&StatusField.Type=SingleSelect&StatusField.StandardField=Status&PriceType=false&CurrencyId=1" for i in range(1,pagination)
+        f"https://ss.ge/ka/udzravi-qoneba/l/kerdzo-saxli/iyideba?Page={i}&RealEstateTypeId=4&RealEstateDealTypeId=4&StatusField.FieldId=34&StatusField.Type=SingleSelect&StatusField.StandardField=Status&PriceType=false&CurrencyId=1" for i in range(1,250)
     ]
 
 
