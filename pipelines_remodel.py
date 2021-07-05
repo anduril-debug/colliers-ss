@@ -132,7 +132,7 @@ class FlatRemodelPipeline(object):
                             administrative_area_level_2 = item["administrative_area_level_2"],
                             administrative_area_level_3 = item["administrative_area_level_3"],
                             administrative_area_level_4 = item["administrative_area_level_4"],
-                            address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name
+                            address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name, is_used = "no"
                             )
 
                 db.session.add(flat)
@@ -210,7 +210,7 @@ class HouseRemodelPipeline(object):
                             administrative_area_level_2 = item["administrative_area_level_2"],
                             administrative_area_level_3 = item["administrative_area_level_3"],
                             administrative_area_level_4 = item["administrative_area_level_4"],
-                            address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name)
+                            address = address.name, subdistrict = subdistrict.name, district = district.name, city = city.name, is_used = "no")
 
                 db.session.add(house)
                 db.session.commit()

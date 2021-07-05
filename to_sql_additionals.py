@@ -146,7 +146,7 @@ def create_local_tmp_flats(cursor,conn):
                     		INTO flat_tmp_colliers_outside_tbilisi
                     FROM flat_remodel
                     LEFT JOIN administrative_area ON flat_remodel.administrative_area_level_1 = administrative_area.name
-                    WHERE flat_remodel.administrative_area_level_1 != 'თბილისი' AND flat_remodel.is_used = 'no';
+                    WHERE flat_remodel.administrative_area_level_1 != 'თბილისი' AND flat_remodel.is_used = 'no' OR flat_remodel.is_used = null;
 
                     ALTER TABLE flat_tmp_colliers_outside_tbilisi
                     ADD COLUMN property varchar(255) DEFAULT 'ბინა',
@@ -172,7 +172,7 @@ def create_local_tmp_flats(cursor,conn):
                     		INTO flat_tmp_colliers_tbilisi
                     FROM flat_remodel
                     LEFT JOIN street ON flat_remodel.address=street.name
-                    WHERE flat_remodel.administrative_area_level_1 = 'თბილისი' AND flat_remodel.is_used = 'no' ;
+                    WHERE flat_remodel.administrative_area_level_1 = 'თბილისი' AND flat_remodel.is_used = 'no' OR flat_remodel.is_used = null ;
 
 
                     ALTER TABLE flat_tmp_colliers_tbilisi
@@ -203,7 +203,7 @@ def create_local_tmp_houses(cursor,conn):
                     		INTO house_tmp_colliers_outside_tbilisi
                     FROM house_remodel
                     LEFT JOIN administrative_area ON house_remodel.administrative_area_level_1 = administrative_area.name
-                    WHERE house_remodel.administrative_area_level_1 != 'თბილისი' AND house_remodel.is_used = 'no';
+                    WHERE house_remodel.administrative_area_level_1 != 'თბილისი' AND house_remodel.is_used = 'no' OR house_remodel.is_used = null;
 
                     ALTER TABLE house_tmp_colliers_outside_tbilisi
                     ADD COLUMN property varchar(255) DEFAULT 'სახლი',
@@ -229,7 +229,7 @@ def create_local_tmp_houses(cursor,conn):
                     		INTO house_tmp_colliers_tbilisi
                     FROM house_remodel
                     LEFT JOIN street ON house_remodel.address=street.name
-                    WHERE house_remodel.administrative_area_level_1 = 'თბილისი' AND house_remodel.is_used = 'no';
+                    WHERE house_remodel.administrative_area_level_1 = 'თბილისი' AND house_remodel.is_used = 'no' OR house_remodel.is_used = null;
 
 
                     ALTER TABLE house_tmp_colliers_tbilisi
