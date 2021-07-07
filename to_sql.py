@@ -9,6 +9,7 @@ import json
 import datetime
 
 from to_sql_additionals import usd_to_gel,connect_to_colliers_db,connect_to_local_db,create_local_tmp_flats,drop_local_tmps,insert_into_ms_sql_flats,insert_into_ms_sql_houses,create_local_tmp_houses
+from fix_missings import fix_missing_flats,fix_missing_houses
 
 
 
@@ -17,8 +18,10 @@ load_dotenv()
 cnxn = connect_to_colliers_db()
 colliers_cursor = cnxn.cursor()
 
+#### fix missing values
 
-
+fix_missing_flats()
+fix_missing_houses()
 
 #### temporary sql tables
 
@@ -58,7 +61,7 @@ except Exception as e:
 cursor.execute("SELECT * FROM flat_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით'")
 flats_outside_tbilisi = cursor.fetchall()
 
-cursor.execute("SELECT * FROM house_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით' ")
+cursor.execute("SELECT * FROM house_tmp_colliers_outside_tbilisi WHERE price != 'შეთანხმებით'")
 houses_outside_tbilisi = cursor.fetchall()
 
 cursor.execute("SELECT * FROM flat_tmp_colliers_tbilisi WHERE price != 'შეთანხმებით'")
